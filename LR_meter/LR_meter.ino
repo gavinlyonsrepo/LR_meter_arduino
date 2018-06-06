@@ -24,7 +24,7 @@ const int Res1M = 11;
 
 // Inductance test pin numbers
 const int OutLtestPin = 13; //digital pin input to circuit to "ring" LC circuit
-const int PulseInPin = 11; //digital pin to read in pulse , is the comparator/op-amp output.
+const int PulseInPin = 12; //digital pin to read in pulse , is the comparator/op-amp output.
 
 //*************************** SETUP ************************
 void setup() 
@@ -209,6 +209,7 @@ void print_Res(String unit, float R2)
 //Function L_test: Calculates Inductance
 void L_test()
 { 
+
   double pulse, frequency, capacitance, inductance;
   digitalWrite(OutLtestPin, HIGH);
   delay(5);//give some time to charge inductor.

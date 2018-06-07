@@ -28,11 +28,11 @@ You will need following parts.
 >
 > Capacitors: 2* non-polarized 1uF 
 >
-> Analog joystick five pin slide with integral push button 
+> Analog joystick five pin slide with integral push button [link](https://www.ebay.ie/itm/PS3-Joystick-Game-Controller-PCB-Breakout-Module-for-Arduino-Board-Analogue/111766535751?hash=item1a05cdfe47:g:CksAAOSwttVaMlYq)
 >
 > Diode:  1N4001
 >
-> LM393 comparator IC 
+> LM393 comparator IC [datasheet](https://www.onsemi.com/pub/Collateral/LM393-D.PDF)
 >
 > Output terminal connections
 >
@@ -49,11 +49,11 @@ Features
 
 This test is activated by Joystick control, You could also use a DIP switch or rotary encoder or set of push buttons in an alternative design. The resistors used in circuit should be measured on good quality meter and there exact values added to code for maximum accuracy.
 
-Right: 0-2kohms : 2K resistor
+Right: 0-2kohms : 2kohms resistor
 
-Left: 2k-20k : 21.3k resistor
+Left: 2k-20k : 20k resistor
 
-Down: 20k-200k : 200K resistor
+Down: 20k-200k : 200k resistor
 
 Up: 200k - 1Mohm : 1 Mohm resistor
 
@@ -77,12 +77,12 @@ A 5V pulse signal from Arduino is applied to the LC circuit. We charge the circu
 
 ![ScreenShot seq 1](https://github.com/gavinlyonsrepo/LR_meter_arduino/blob/master/documentation/images/eq1.png)
 
-So we could obtain the L value because we know the F frequency that we've just measured and we also know the values f the C capacitor because it's a component that we've selected. All we need is to obtain L from this equation.
+So we could obtain the L value because we know the F frequency that we've just measured and we also know the values of the capacitor because it's a component that we've selected. All we need is to obtain L from this equation.
 
 
 ![ScreenShot seq 2](https://github.com/gavinlyonsrepo/LR_meter_arduino/blob/master/documentation/images/eq2.png)
 
-The comparator will turn the sine wave into a square wave with a duty of 50%,  The microcontroller measures the signal , This measurement can then be doubled to get the period and the inverse of the period is the frequency. Since the circuit is resonating, this frequency is the resonating frequency.
+The comparator will turn the sine wave into a square wave with a duty of 50%(see fig 9 in datasheet),  The microcontroller measures the signal , This measurement can then be doubled to get the period and the inverse of the period is the frequency. Since the circuit is resonating, this frequency is the resonating frequency.
 
 We can now solve for the equation for inductance.
 

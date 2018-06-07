@@ -6,12 +6,6 @@ Overview
 * Author: Gavin Lyons
 
 
-Libraries
-------------------------
-
-No libraries where used in this project
-
-
 Software Used
 ------------------
 Arduino 1.8.5
@@ -50,8 +44,9 @@ Features
 ![ScreenShot schematic](https://github.com/gavinlyonsrepo/LR_meter_arduino/blob/master/documentation/images/lr_meter2.png)
 
 
-Resistance test
-#
+**Resistance test**
+
+
 This test is activated by Joystick control, You could also use a DIP switch or rotary encoder or set of push buttons in an alternative design. The resistors used in circuit should be measured on good quality meter and there exact values added to code for maximum accuracy.
 
 Right: 0-2kohms : 2K resistor
@@ -70,8 +65,8 @@ A voltage divider is made of two Resistances (R1 and R2) in series. The output v
 Vin will be 5 volts from the Arduino, We can measure Vout with one of the Arduino's analog inputs.
 We need to use different ranges of R2 to measure with better  precision. 
 
-Inductance test
-#
+**Inductance test**
+
 This test is activated by push button on joystick.
 
 This test test range is from 80uH to 30,000uH. Ideally the capacitors in circuit must be in specification and measured on a good quality meter. The unknown test inductor is placed in  parallel with a capacitor is creating an LC circuit. 

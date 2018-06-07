@@ -1,9 +1,12 @@
 /*
-   Name : LR_meter_ardunio
+  Name : LR_meter_ardunio
   Title : Resistance and Inductance meter. Ardunio ucontroller based.
-  Description : Resistance and Inductance meter,  Ardunio based
+  Description : Inductance and Resistance meter, Arduino based. 2 tests, 
+  4 resistor test ranges. One Inductance test, Analog joystick input , 
+  outputs to serial monitor. Resistor range is form 0 ohms to 2 Mohms , 
+  Inductor range is 80uH to 30,000uH. 
   Author: Gavin Lyons
-  URL: 
+  URL: https://github.com/gavinlyonsrepo/LR_meter_arduino
 */
 
 //*************************** GLOBALS ********************

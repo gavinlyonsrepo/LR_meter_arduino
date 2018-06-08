@@ -44,6 +44,10 @@ void setup()
   pinMode(Res20K,INPUT);
   pinMode(Res200K,INPUT);
   pinMode(Res1M,INPUT);
+
+  //Inductance test pins
+  pinMode(PulseInPin, INPUT);
+  pinMode(OutLtestPin, OUTPUT);
   
   Serial.begin(9600);
   delay(100);
@@ -58,7 +62,6 @@ void loop()
   {
     // Switch pressed Inductance test
     Serial.println("Inductance test:");
-    Serial.println(digitalRead(SW_pin));
     L_test();
   }
   if (analogRead(X_pin) > 900)

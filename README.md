@@ -2,7 +2,7 @@ Overview
 --------------------
 * Name : LR_meter_arduino
 * Title : Inductance and Resistance meter, Arduino based.
-* Description : Inductance and Resistance meter, Arduino based. 2 tests, 4 resistor test ranges. One Inductance test, Analog joystick input , outputs to serial monitor.  Resistor range is form 0ohms to 2MOhms , Inductor range is 80uH to 30,000uH.
+* Description : Inductance and Resistance meter, Arduino based. 2 tests, 4 resistor test ranges. One Inductance test, Analog joystick input , outputs to serial monitor.  Resistor range is from 0ohms to 2MOhms , Inductor range is 80uH to 30,000uH.
 * Author: Gavin Lyons
 
 
@@ -10,14 +10,12 @@ Software Used
 ------------------
 Arduino 1.8.5
 
-Fritzing 0.9.3 
-
 Eagle 9.0.1
 
 
 Parts List
 ------------------------------
-The schematic is available in Eagle or fritzing format in documents. 
+The schematic is available in Eagle in documents
 
 You will need following parts.
 

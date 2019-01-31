@@ -58,12 +58,13 @@ void setup()
 void loop() 
 {      
   // Read Joystick input on SW_pin
-  if (digitalRead(SW_pin) == 1)
+  if (digitalRead(SW_pin) == 0)
   {
     // Switch pressed Inductance test
     Serial.println("Inductance test:");
     L_test();
   }
+  
   if (analogRead(X_pin) > 900)
   {
     // up pressed, 200k to 1Meg 

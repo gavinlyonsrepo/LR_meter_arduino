@@ -13,6 +13,11 @@ Arduino 1.8.5
 Eagle 9.0.1
 
 
+Libraries
+------------------------
+* <Wire.h> //I2C for LCD comms 1.0.0
+* <LiquidCrystal_I2C.h>// LCD Library 1.1.2 
+
 Parts List
 ------------------------------
 The schematic is available in Eagle in documents
@@ -20,20 +25,32 @@ The schematic is available in Eagle in documents
 You will need following parts.
 
 >
-> Arduino based board with 8 digital pins and 3 analog pins + serial output. (eg nano)
+> LCD 1602 I2C 
+>
+> Arduino NANO or UNO
 >
 > Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm, 
 >
-> Capacitors: 2* non-polarized 1uF 
+> Capacitors: 1 uF non-polarized  
 >
-> Analog joystick five pin slide with integral push button [link](https://www.ebay.ie/itm/PS3-Joystick-Game-Controller-PCB-Breakout-Module-for-Arduino-Board-Analogue/111766535751?hash=item1a05cdfe47:g:CksAAOSwttVaMlYq)
+> Analog joystick five pin slide with integral push button , PS2 style 2 axis directional joystick
+[link](https://www.ebay.ie/itm/PS3-Joystick-Game-Controller-PCB-Breakout-Module-for-Arduino-Board-Analogue/111766535751?hash=item1a05cdfe47:g:CksAAOSwttVaMlYq)
 >
-> Diode:  1N4001
+> Diode:  1N4001 or IN4148
 >
-> LM393 comparator IC [datasheet](https://www.onsemi.com/pub/Collateral/LM393-D.PDF)
+> LM393 comparator IC [datasheet](https://www.onsemi.com/pub/Collateral/LM393-D.PDF) or LM339
 >
 > Output terminal connections
 >
+
+
+Joystick control
+-------------------------------
+1. Button = carry out Inductance test.
+2. Right = carry out 0 to 2k range resistor test.
+3. left = carry out 2K to 20k range resistor test.
+4. Down = carry out 20k to 200k range resistor test.
+5. Up = carry out 200k to 1M range resistor test.
 
 
 Features

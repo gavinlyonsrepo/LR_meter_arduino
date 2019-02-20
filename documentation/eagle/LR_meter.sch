@@ -9392,7 +9392,7 @@ to be daisy chained easily.&lt;/p&gt;
 <part name="SUPPLY5" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="GND" device=""/>
 <part name="SUPPLY6" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="VCC" device=""/>
 <part name="SUPPLY7" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="VCC" device=""/>
-<part name="J4" library="SparkFun-Connectors" library_urn="urn:adsk.eagle:library:513" deviceset="I2C_STANDARD" device="" package3d_urn="urn:adsk.eagle:package:38085/1" value="LCD 1602 I2C"/>
+<part name="J4" library="SparkFun-Connectors" library_urn="urn:adsk.eagle:library:513" deviceset="I2C_STANDARD" device="" package3d_urn="urn:adsk.eagle:package:38085/1" value="OLED '91 I2C SS1206"/>
 </parts>
 <sheets>
 <sheet>

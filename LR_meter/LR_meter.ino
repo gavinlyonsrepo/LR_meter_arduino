@@ -3,7 +3,7 @@
   Title : Resistance and Inductance meter. Ardunio ucontroller based.
   Description : Inductance and Resistance meter, Arduino based. 2 tests,
   4 resistor test ranges. One Inductance test, Analog joystick input ,
-  outputs to serial monitor and LCD 1602. Resistor range is from 0 ohms to 2 Mohms ,
+  outputs to serial monitor and OLED 1602. Resistor range is from 0 ohms to 2 Mohms ,
   Inductor range is 80uH to 30,000uH.
   Author: Gavin Lyons
   URL: https://github.com/gavinlyonsrepo/LR_meter_arduino
@@ -11,7 +11,7 @@
 
 //****************** Libraries ********************
 #include <Wire.h>
-#include <LiquidCrystal_I2C.h>
+#include <Adafruit_SSD1306.h> // OLED 1.1.2
 
 //***************** GLOBALS ********************
 
@@ -24,69 +24,33 @@ const int Y_pin = 1; // analog pin connected to Y output
 const int analogPin = 2; //analog pin read for resistor test
 const int apply_voltage = 7;  //digital pin to resitor unknown apply 5V
 // Known Resistors connected to these 4 digital pins
-const int Res2K = 8;
-const int Res20K = 9;
-const int Res200K = 10;
-const int Res1M = 11;
+const int Res2K = 11;
+const int Res20K = 10;
+const int Res200K = 9;
+const int Res1M = 8;
 
 // Inductance test pin numbers
 const int OutLtestPin = 13; //digital pin input to circuit to "ring" LC circuit
 const int PulseInPin = 12; //digital pin to read in pulse , is the comparator/op-amp output.
 
-//LCD
-// initialize the LCD class object
-// set the LCD address to 0x27 for a 16 chars and 2 line display
-// Sometimes the adress is not  0x27. Change to 0x3f if it dosn't work.
-LiquidCrystal_I2C lcd(0x27, 16, 2); 
+// OLED data
+#define OLED_RESET 4
+Adafruit_SSD1306 display(OLED_RESET);
 
 //*************** SETUP *************
 void setup()
 {
   Serialinit();
   GPIOinit();  
-  LCDinit();  
+  Display_init(); 
 }
 
 //******************* MAIN LOOP *****************
 void loop()
 {
-  // Read Joystick input on SW_pin
-  if (digitalRead(SW_pin) == 0)
-  {
-    // Switch pressed Inductance test
-    printScaleMsg(6);
-    L_test();
-  }
-
-  //Read Joystick input position
-  if (analogRead(X_pin) > 900)
-  {
-    // up pressed, 200k to 1Meg
-    printScaleMsg(4);
-    scale_four();
-  }
-  if (analogRead(X_pin) < 100)
-  {
-    //down pressed, 20k to 200k
-    printScaleMsg(3);
-    scale_three();
-  }
-  if (analogRead(Y_pin) < 100)
-  {
-    //left pressed, 2k to 20k
-    printScaleMsg(2);
-    scale_two();
-  }
-  if (analogRead(Y_pin) > 900)
-  {
-    //right pressed, 0 to 2k
-    printScaleMsg(1);
-    scale_one();
-  }
-  
-  delay(500);
+  JoyStickRead();
+  delay(50);
 }
-
 
 // ********************* Functions *************************
 
@@ -201,36 +165,38 @@ float calc_Res(float R1, int multi_factor)
 // of which message to print.
 void printScaleMsg(int pick)
 {
-  lcd.clear();
-  lcd.setCursor(0, 0);
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
   switch (pick)
   {
         case (1): 
-               lcd.print("0k to 2k range");
-               Serial.print("0k to 2k rang");
+               display.print("R 0k - 2k range");
+               Serial.println("0k to 2k rang");
         break;
         case (2):
-               lcd.print("2k to 20k range");
-               Serial.print("2k to 20k range");
+               display.print("R 2k - 20k range");
+               Serial.println("2k to 20k range");
         break;
         case (3): 
-                lcd.print("20k to 200k range");
+                display.print("R 20k - 0.2M range");
                 Serial.println("20k to 200k range");
         break;
         case (4): 
-               lcd.print("200k - 1M range");
+               display.print("R  0.2M - 1M range");
                Serial.println("200k to 1M range");
         break;             
         case (5):
-               lcd.print("Increase Scale");
-               Serial.print("Increase scale");
-               delay(750);
-               LCDready();              
+               display.print("Increase Scale");
+               display.display();
+               Serial.println("Increase scale");
+               delay(1000);
+               OLEDready();              
         break;
        case (6):
-               lcd.print("Inductance test");
-               Serial.print("Inductance test");
-               delay(750);             
+               display.print("Inductance test");
+               Serial.println("Inductance test");            
         break;
   }
   delay(1000);
@@ -241,19 +207,18 @@ void printScaleMsg(int pick)
 // 2, float R2 , value of resistance calculated
 void print_Res(String unit, float R2)
 {
-  Serial.println("Resistance: ");
-  Serial.print(R2);
-  Serial.print(" ");
-  Serial.println(unit);
-  lcd.clear();
-  lcd.setCursor(0,0); 
-  lcd.print("Resistance:");
-  lcd.setCursor(0,1); 
-  lcd.print(R2);
-  lcd.setCursor(10,1); 
-  lcd.print(unit);          
-  delay(2000);
-  LCDready();
+    Serial.println("Resistance: ");
+    Serial.print(R2);
+    Serial.print(" ");
+    Serial.println(unit);
+    
+    display.setCursor(0, 15);
+    display.print(R2);
+    display.print(unit); 
+    display.display();
+    delay(2000);
+    
+    OLEDready();
 }
 
 //Function L_test: Calculates Inductance
@@ -273,6 +238,8 @@ void L_test()
     inductance = 1. / (capacitance * frequency * frequency * 4.*3.14159 * 3.14159);
     inductance *= 1E6;
 
+  }
+  
     //Serial print
     Serial.print("High for uS:");
     Serial.print( pulse );
@@ -280,49 +247,46 @@ void L_test()
     Serial.print( frequency );
     Serial.print("\tinductance uH:");
     Serial.println( inductance );
-    lcd.clear();
-    lcd.setCursor(0,0); 
-    lcd.print("Inductance:");
-    lcd.setCursor(0,1); 
-    lcd.print(inductance);
-    lcd.setCursor(14,1); 
-    lcd.print("uH");          
-  }
-  delay(2000);
+ 
+    display.setCursor(0, 15);
+    display.print(inductance);
+    display.print("uH"); 
+    display.display();
+    delay(2000);
+    OLEDready(); 
 }
 
-//Function to init LCD and display LCD  welcome message
-void LCDinit()
+//Function to init OLED and display OLED  welcome message
+// Function to display init screen in setup
+void Display_init()
 {
-  lcd.init();  //initialize the lcd
-  lcd.backlight();  //open the backlight
-  lcd.display();
-
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("LR Meter");
-  lcd.setCursor(0, 1);
-  lcd.print("By Gavin Lyons");
-  delay(1200);
-  lcd.clear();
-
-  lcd.setCursor(0, 0);
-  lcd.print("Help at github");
-  lcd.setCursor(0, 1);
-  lcd.print("gavinlyonsrepo");
-  delay(1200);
-  lcd.clear();
-  LCDready();
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  
+  display.setCursor(0, 0);
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.print("LR Meter");
+  display.setCursor(0, 15);
+  display.print("G. Lyons");
+  display.display();
+  delay(1500); 
+  OLEDready();
 }
 
-//Function to display Ready message on LCD and serial monitor
-void LCDready()
+//Function to display Ready message on OLED and serial monitor
+void OLEDready()
 {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("LR Meter");
-  lcd.setCursor(0, 1);
-  lcd.print("Ready ");
+  display.clearDisplay();
+  display.display();
+  display.setCursor(0, 0);
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.print("LR Meter");
+  display.setCursor(0, 15);
+  display.print("Ready");
+  display.display();
+  delay(1500); 
   Serial.println("LR Meter Ready");
 }
 
@@ -353,5 +317,43 @@ void GPIOinit()
   //Inductance test pins
   pinMode(PulseInPin, INPUT);
   pinMode(OutLtestPin, OUTPUT);
+}
+
+void JoyStickRead()
+{
+    // Read Joystick input on SW_pin
+  if (digitalRead(SW_pin) == 0)
+  {
+    // Switch pressed Inductance test
+    printScaleMsg(6);
+    L_test();
+  }
+
+  //Read Joystick input position
+  if (analogRead(X_pin) > 900)
+  {
+    // up pressed, 200k to 1Meg
+    printScaleMsg(4);
+    scale_four();
+  }
+  if (analogRead(X_pin) < 100)
+  {
+    //down pressed, 20k to 200k
+    printScaleMsg(3);
+    scale_three();
+  }
+  if (analogRead(Y_pin) < 100)
+  {
+    //left pressed, 2k to 20k
+    printScaleMsg(2);
+    scale_two();
+  }
+  if (analogRead(Y_pin) > 900)
+  {
+    //right pressed, 0 to 2k
+    printScaleMsg(1);
+    scale_one();
+  }
+  
 }
 //******************* EOF *****************

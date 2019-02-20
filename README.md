@@ -2,7 +2,7 @@ Overview
 --------------------
 * Name : LR_meter_arduino
 * Title : Inductance and Resistance meter, Arduino based.
-* Description : Inductance and Resistance meter, Arduino based. 2 tests, 4 resistor test ranges. One Inductance test, Analog joystick input , outputs to serial monitor.  Resistor range is from 0ohms to 2MOhms , Inductor range is 80uH to 30,000uH.
+* Description : Inductance and Resistance meter, Arduino based. 2 tests, 4 resistor test ranges. One Inductance test, Analog joystick input , outputs to serial monitor and OLED.  Resistor range is from 0ohms to 2MOhms , Inductor range is 80uH to 30,000uH.
 * Author: Gavin Lyons
 
 
@@ -15,8 +15,8 @@ Eagle 9.0.1
 
 Libraries
 ------------------------
-* <Wire.h> //I2C for LCD comms 1.0.0
-* <LiquidCrystal_I2C.h>// LCD Library 1.1.2 
+* <Wire.h> //I2C for OLED comms 1.0.0
+* <Adafruit_SSD1306.h> // OLED 1.1.2
 
 Parts List
 ------------------------------
@@ -25,13 +25,13 @@ The schematic is available in Eagle in documents
 You will need following parts.
 
 >
-> LCD 1602 I2C 
+> I2C 0.91" inch 128x32 OLED Display Module Driver IC: SSD1306.
 >
 > Arduino NANO or UNO
 >
-> Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm, 
+> Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm, 10Kohm
 >
-> Capacitors: 1 uF non-polarized  
+> Capacitors: 2 uF non-polarized  
 >
 > Analog joystick five pin slide with integral push button , PS2 style 2 axis directional joystick
 [link](https://www.ebay.ie/itm/PS3-Joystick-Game-Controller-PCB-Breakout-Module-for-Arduino-Board-Analogue/111766535751?hash=item1a05cdfe47:g:CksAAOSwttVaMlYq)
@@ -62,7 +62,7 @@ Features
 **Resistance test**
 
 
-This test is activated by Joystick control, You could also use a DIP switch or rotary encoder or set of push buttons in an alternative design. The resistors used in circuit should be measured on good quality meter and there exact values added to code for maximum accuracy.
+This test is activated by Joystick control, You could also use a rotary encoder or set of push buttons in an alternative design. The resistors used in circuit should be measured on good quality meter and there exact values added to code for maximum accuracy.
 
 Right: 0-2kohms : 2kohms resistor
 

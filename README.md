@@ -2,7 +2,7 @@ Overview
 --------------------
 * Name : LR_meter_arduino
 * Title : Inductance and Resistance meter, Arduino based.
-* Description : Inductance and Resistance meter, Arduino based. 2 tests, 4 resistor test ranges. One Inductance test, Analog joystick input , outputs to serial monitor and OLED.  Resistor range is from 0ohms to 2MOhms , Inductor range is 80uH to 30,000uH.
+* Description : Inductance and Resistance meter, Arduino based. 3 tests, 4 resistor test ranges. One Inductance test, ADC measurement display , Push button  input , outputs data to serial monitor and OLED. Resistor range is from 0ohms to 2MOhms , Inductor range is 80uH to 30,000uH.
 * Author: Gavin Lyons
 
 
@@ -22,55 +22,66 @@ Parts List
 ------------------------------
 The schematic is available in Eagle in documents
 
-You will need following parts.
+Parts List:
 
 >
 > I2C 0.91" inch 128x32 OLED Display Module Driver IC: SSD1306.
 >
 > Arduino NANO or UNO
 >
-> Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm, 10Kohm
+> Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm.
 >
 > Capacitors: 2 uF non-polarized  
 >
-> Analog joystick five pin slide with integral push button , PS2 style 2 axis directional joystick
-[link](https://www.ebay.ie/itm/PS3-Joystick-Game-Controller-PCB-Breakout-Module-for-Arduino-Board-Analogue/111766535751?hash=item1a05cdfe47:g:CksAAOSwttVaMlYq)
+> Two push buttons.
 >
 > Diode:  1N4001 or IN4148
 >
 > LM393 comparator IC [datasheet](https://www.onsemi.com/pub/Collateral/LM393-D.PDF) or LM339
 >
-> Output terminal connections
+> Output terminal or socket connections
 >
 
 
-Joystick control
+Push Button control
 -------------------------------
-1. Button = carry out Inductance test.
-2. Right = carry out 0 to 2k range resistor test.
-3. left = carry out 2K to 20k range resistor test.
-4. Down = carry out 20k to 200k range resistor test.
-5. Up = carry out 200k to 1M range resistor test.
 
+Push Buttons
+1. Mode Button to change mode
+2. Test button to start test for selected mode.
+
+Tests Modes:
+
+1. Inductance test.
+2. 0 to 2k range resistor test.
+3. 2K to 20k range resistor test.
+4. 20k to 200k range resistor test.
+5. 200k to 1M range resistor test.
+6. Display ADC in digital value and Voltage.
 
 Features
 -----------------------------------------------
 
 ![ScreenShot schematic](https://github.com/gavinlyonsrepo/LR_meter_arduino/blob/master/documentation/images/lr_meter2.png)
 
+The unit was two push buttons , mode-menu and test. 
+"Mode-menu" changes the display and "test" starts test.
+
+** Display ADC in digital value and Voltage. **
 
 **Resistance test**
 
 
-This test is activated by Joystick control, You could also use a rotary encoder or set of push buttons in an alternative design. The resistors used in circuit should be measured on good quality meter and there exact values added to code for maximum accuracy.
+The resistors used in circuit should be measured on good quality meter 
+and there exact values added to code for maximum accuracy.
 
-Right: 0-2kohms : 2kohms resistor
+0-2kohms : 2kohms resistor
 
-Left: 2k-20k : 20k resistor
+2k-20k : 20k resistor
 
-Down: 20k-200k : 200k resistor
+20k-200k : 200k resistor
 
-Up: 200k - 1Mohm : 1 Mohm resistor
+200k - 1Mohm : 1 Mohm resistor
 
 So we will use a basic voltage divider to calculate the resistance. 
 
@@ -82,9 +93,7 @@ We need to use different ranges of R2 to measure with better  precision.
 
 **Inductance test**
 
-This test is activated by push button on joystick.
-
-This test test range is from 80uH to 30,000uH. Ideally the capacitors in circuit must be in specification and measured on a good quality meter. The unknown test inductor is placed in  parallel with a capacitor is creating an LC circuit. 
+This tests test range is from 80uH to 30,000uH. Ideally the capacitors in circuit must be in specification and measured on a good quality meter. The unknown test inductor is placed in  parallel with a capacitor is creating an LC circuit. 
 
 As soon as the voltage on the LC circuit becomes positive, the LM393 will be floating, which can be pulled high with a pull up resistor. When the voltage on the LC circuit becomes negative, the LM393 will pull its output to ground. 
 
@@ -99,7 +108,7 @@ So we could obtain the L value because we know the F frequency that we've just m
 
 The comparator will turn the sine wave into a square wave with a duty of 50%(see fig 9 in datasheet),  The microcontroller measures the signal , This measurement can then be doubled to get the period and the inverse of the period is the frequency. Since the circuit is resonating, this frequency is the resonating frequency.
 
-We can now solve for the equation for inductance.
+We can now solve the equation for inductance.
 
 
 Copyright

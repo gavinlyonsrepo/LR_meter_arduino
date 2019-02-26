@@ -64,13 +64,8 @@ Features
 
 ![ScreenShot schematic](https://github.com/gavinlyonsrepo/LR_meter_arduino/blob/master/documentation/images/lr_meter2.png)
 
-The unit was two push buttons , mode-menu and test. 
-"Mode-menu" changes the display and "test" starts test.
-
-** Display ADC in digital value and Voltage. **
 
 **Resistance test**
-
 
 The resistors used in circuit should be measured on good quality meter 
 and there exact values added to code for maximum accuracy.
@@ -110,6 +105,13 @@ The comparator will turn the sine wave into a square wave with a duty of 50%(see
 
 We can now solve the equation for inductance.
 
+
+
+
+**Display ADC in digital value and Voltage.**
+
+This displays the voltage and ADC digital value measured on AO, This can be sued for testing potentiometers,
+sensors or measuring voltage levels.
 
 Copyright
 -------------------------------

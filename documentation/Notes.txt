@@ -1,0 +1,19 @@
+ZIF TEST socket pin layout
+----------------------------------
+
+1. A2 n/c n/c n/c R    R  R R 
+
+2. A0 n/c GND n/c VCC n/c L L 
+
+
+
+Resistors values used in code:
+
+1. 2.005 Kohms
+2. 20.03 Kohms
+3. 218   Kohms
+4. 1.006 Mohms 
+
+Capacitor value
+
+1. 2uF

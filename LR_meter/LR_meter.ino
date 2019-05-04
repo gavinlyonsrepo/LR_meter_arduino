@@ -160,7 +160,7 @@ void scale_one()
   pinMode(Res1M, INPUT);
   digitalWrite(Res2K, LOW);
   float R2 = 0;
-  float R1 = 2.009; // Set this value to the value of the used resistor in K ohms
+  float R1 = 2.005; // Set this value to the value of the used resistor in K ohms
   R2 = calc_Res(R1, 1000);
   if (R2 > (R1 * 1000))
   {
@@ -183,8 +183,8 @@ void scale_two()
   pinMode(Res1M, INPUT);
   digitalWrite(Res20K, LOW);
   float R2 = 0;
-  float R1 = 21.3; // Set this value to the value of the used resistor in K ohms
-  R2 = calc_Res(21.3, 1);
+  float R1 = 18.3; // Set this value to the value of the used resistor in K ohms
+  R2 = calc_Res(20.03, 1);
   if (R2 > R1)
   {
     mode = 8;  //increase scale
@@ -206,7 +206,7 @@ void scale_three()
   pinMode(Res1M, INPUT);
   digitalWrite(Res200K, LOW);
   float R2 = 0;
-  float R1 = 182; // Set this value to the value of the used resistor in K ohms
+  float R1 = 218; // Set this value to the value of the used resistor in K ohms
   R2 = calc_Res(R1, 1);
   if (R2 > R1)
   {
@@ -228,7 +228,7 @@ void scale_four()
   pinMode(Res1M, OUTPUT);
   digitalWrite(Res200K, LOW);
   float R2 = 0;
-  float R1 = 1.006;// Set first value to the value of the used resistor in K ohms
+  float R1 = 1.006;// Set first value to the value of the used resistor in M ohms
   R2 = calc_Res(R1, 1);
   if (R2 > 2)
   {
@@ -396,14 +396,14 @@ void AnalogDisplay()
 //Function L_test: Calculates Inductance
 void L_test()
 {
-  double pulse, frequency, capacitance, inductance;
+  double pulse, frequency, capacitance, inductance = 0;
   digitalWrite(OutLtestPin, HIGH);
   delay(5);//give some time to charge inductor.
   digitalWrite(OutLtestPin, LOW);
   delayMicroseconds(100); //make sure resonation is measured
   pulse = pulseIn(PulseInPin, HIGH, 5000); //returns 0 if timeout
   if (pulse > 0.1) { //pulse returns 0 if no complete pulse was received within the timeout
-
+     
     capacitance = 2.E-6; // - insert Cap value here
 
     frequency = 1.E6 / (2 * pulse);

@@ -29,7 +29,7 @@ Parts List:
 >
 > Arduino NANO or UNO
 >
-> Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm.
+> Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm, 4.7Kohms X 2 .
 >
 > Capacitors: 2 uF non-polarized  
 >
@@ -39,7 +39,7 @@ Parts List:
 >
 > LM393 comparator IC [datasheet](https://www.onsemi.com/pub/Collateral/LM393-D.PDF) or LM339
 >
-> Output terminal or socket connections
+> ZIF test socket , Output terminal or socket connections
 >
 
 
@@ -110,7 +110,7 @@ We can now solve the equation for inductance.
 
 **Display ADC in digital value and Voltage.**
 
-This displays the voltage and ADC digital value measured on AO, This can be sued for testing potentiometers,
+This displays the voltage and ADC digital value measured on A0, This can be used for testing potentiometers,
 sensors or measuring voltage levels.
 
 Copyright

@@ -1,3 +1,4 @@
+
 /*
   Name : LR_meter_ardunio
   Title : Resistance and Inductance meter. Ardunio ucontroller based.
@@ -10,7 +11,6 @@
 */
 
 //****************** Libraries ********************
-#include <Wire.h>
 #include <Adafruit_SSD1306.h> // OLED 1.1.2
 
 //***************** GLOBALS ********************
@@ -31,9 +31,7 @@ int lastButtonModeState = HIGH;   // the previous reading from the input pin
 // the following variable are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
 unsigned long lastDebounceModeTime = 0;  // the last time the output pin was toggled
-
 unsigned long debounceDelay = 50;    // the debounce time; 
-
 
 // Var to hold menu mode
 uint8_t mode = 0;
@@ -58,12 +56,31 @@ const int PulseInPin = 12; //digital pin to read in pulse
 #define OLED_RESET 4
 Adafruit_SSD1306 display(OLED_RESET);
 
+//**************** FUNCTION PROTOTYPES ***********
+void DisplayInit();
+void Serialinit();
+void GPIOinit();
+void OLEDready();
+void DisplayHelpMsg();
+void ResScaleOne();
+void ResScaleTwo();
+void ResScaleThree();
+void ResScaleFour();
+void Ltest();
+void AnalogDisplay();
+float calcResult(float R1, int multi_factor);
+void PrintResult(String unit, float R2);
+void printMenuMsg();
+void TestRun();
+void ReadPushButtonMode();
+void ReadPushButtonTest();
+
 //*************** SETUP *************
 void setup()
 {
   Serialinit();
   GPIOinit();
-  Display_init();
+  DisplayInit();
 }
 
 //******************* MAIN LOOP *****************
@@ -76,13 +93,28 @@ void loop()
 
 // ********************* Functions *************************
 
-//Function to init OLED and display OLED  welcome message
-void Display_init()
+// Function to display help message related to PCB socket layout
+void DisplayHelpMsg()
 {
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.print("Connector pinout");
+  display.setCursor(0, 12);
+  display.print("Row1 : R1  RRRR");
+  display.setCursor(0, 22);
+  display.print("Row2 : A G V LL");
+  display.display();
+  delay(5000);
+  OLEDready();
+}
 
+//Function to init OLED and display OLED  welcome message
+void DisplayInit()
+{
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   display.clearDisplay();
-
   display.setCursor(0, 0);
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -102,16 +134,14 @@ void OLEDready()
   display.setCursor(0, 0);
   display.setTextSize(2);
   display.setTextColor(WHITE);
-  display.print("LR Meter");
+  display.print("      MODE");
   display.setCursor(0, 15);
-  display.print("Ready");
+  display.print("Ready TEST");
   display.display();
   Serial.println("LR Meter Ready");
   digitalWrite(LED_BUILTIN, HIGH);
   mode = 0;
   delay(50);
-  
-
 }
 
 //Function to setup serial called from setup
@@ -147,11 +177,10 @@ void GPIOinit()
   //Inductance test pins
   pinMode(PulseInPin, INPUT);
   pinMode(OutLtestPin, OUTPUT);
- 
 }
 
-//Function scale_one :resistor 0 to 2k range test.
-void scale_one()
+//Function ResScaleOne :resistor 0 to 2k range test.
+void ResScaleOne()
 {
   digitalWrite(apply_voltage, HIGH);
   pinMode(Res2K, OUTPUT);
@@ -161,20 +190,23 @@ void scale_one()
   digitalWrite(Res2K, LOW);
   float R2 = 0;
   float R1 = 2.005; // Set this value to the value of the used resistor in K ohms
-  R2 = calc_Res(R1, 1000);
+  R2 = calcResult(R1, 1000);
   if (R2 > (R1 * 1000))
   {
-    mode = 8; //increase scale
+    Serial.println("Increasing Scale");
+    mode = 2; //increase scale
     printMenuMsg();
+    //ResetResRange();
+    ResScaleTwo();
   }
   if (R2 < (R1 * 1000))
   {
-    print_Res("ohms", R2);
+    PrintResult("ohms", R2);
   }
 }
 
-//Function scale_two: resistor 2K to 20k range test.
-void scale_two()
+//Function ResScaleTwo: resistor 2K to 20k range test.
+void ResScaleTwo()
 {
   digitalWrite(apply_voltage, HIGH);
   pinMode(Res2K, INPUT);
@@ -184,20 +216,23 @@ void scale_two()
   digitalWrite(Res20K, LOW);
   float R2 = 0;
   float R1 = 18.3; // Set this value to the value of the used resistor in K ohms
-  R2 = calc_Res(20.03, 1);
+  R2 = calcResult(20.03, 1);
   if (R2 > R1)
   {
-    mode = 8;  //increase scale
+    Serial.println("Increasing Scale");
+    mode = 3; //increase scale
     printMenuMsg();
+    //ResetResRange();
+    ResScaleThree();
   }
   if (R2 < R1)
   {
-    print_Res("k ohms", R2);
+    PrintResult("k ohms", R2);
   }
 }
 
-//Function scale_three : resistor test 20k to 200k range test.
-void scale_three()
+//Function ResScaleThree : resistor test 20k to 200k range test.
+void ResScaleThree()
 {
   digitalWrite(apply_voltage, HIGH);
   pinMode(Res2K, INPUT);
@@ -207,59 +242,82 @@ void scale_three()
   digitalWrite(Res200K, LOW);
   float R2 = 0;
   float R1 = 218; // Set this value to the value of the used resistor in K ohms
-  R2 = calc_Res(R1, 1);
+  R2 = calcResult(R1, 1);
   if (R2 > R1)
   {
-    mode = 8; //increase scale
+    Serial.println("Increasing Scale");
+    mode = 4; //increase scale
     printMenuMsg();
+    //ResetResRange();
+    ResScaleFour();
   }
   if (R2 < R1)
   {
-    print_Res("k ohms",  R2);
+    PrintResult("k ohms",  R2);
   }
 }
-//Function scale_four :UP pressed on joystick carry out 200k to 1M range test.
-void scale_four()
+//Function ResScaleFour : resistence test 200k to 1M range test.
+void ResScaleFour()
 {
   digitalWrite(apply_voltage, HIGH);
   pinMode(Res2K, INPUT);
   pinMode(Res20K, INPUT);
   pinMode(Res200K, INPUT);
   pinMode(Res1M, OUTPUT);
-  digitalWrite(Res200K, LOW);
+  digitalWrite(Res1M, LOW);
   float R2 = 0;
-  float R1 = 1.006;// Set first value to the value of the used resistor in M ohms
-  R2 = calc_Res(R1, 1);
-  if (R2 > 2)
+  float R1 = 1006;// Set first value to the value of the used resistor in Kohms
+  R2 = calcResult(R1, 1);
+  if (R2 > 2000)
   {
-    mode = 8; //increase scale, impossible at this point but tell the user anyway 
+    mode = 8; //Beyond Scale Too high
     printMenuMsg();
   }
-  if (R2 < 2)
+  if (R2 < 2000)
   {
-    print_Res("M ohms", R2);
+    if (R2 <= 10)
+    {
+       Serial.println("Decreasing Scale");
+       mode = 1; //decrease scale
+       printMenuMsg();
+       //ResetResRange();
+       ResScaleOne(); 
+       return;  
+    }
+    PrintResult("M ohms", (R2/1000));
   }
 }
 
-// Function: calc_Res to calculate unknown resistor value
+// Function: calcResult to calculate unknown resistor value
 // Inputs: (2) 1, float R1 known resistor value for given scale
-// 2, Integer mulitple factor either 1 or 1000 depending on given scale.
+// 2, Integer multiple factor either 1 or 1000 depending on given scale.
 // Outputs: returns 1, float R2 unknown resitor value
-float calc_Res(float R1, int multi_factor)
+float calcResult(float R1, int multi_factor)
 {
   float R2 = 0;
-  float buffer = 0;
+  float tmpbuffer = 0;
   int V_measured = 0;
-  int Vin = 5;
+  uint8_t Vin = 5;
   float Vout = 0;
-  V_measured = analogRead(analogPin); //in 8bits
-  buffer = V_measured * Vin;
-  Vout = (buffer) / 1024.0; //in volts
-  buffer = (Vin / Vout) - 1;
-  R2 = R1 * buffer * multi_factor;
+  const uint8_t numReadings = 11; // number of analog samples
+  int readings[numReadings];      // the readings from the analog input
+
+  // Get 11(numreadings) values from ADC 
+  for (int thisReading = 0; thisReading < numReadings; thisReading++)
+  {
+    readings[thisReading] = analogRead(analogPin); // ADC
+    if (thisReading != 0) // ignore first reading as it is bad during auto-range.
+    {
+      V_measured  = V_measured + readings[thisReading]; //running total
+    }
+  }
+  V_measured = (V_measured /(numReadings-1)); // average
+  
+  Vout = (V_measured * Vin) / 1024.0; //Convert ADC to voltage
+  tmpbuffer = (Vin / Vout) - 1; //voltage divider (VIN/VOUT -1)
+  R2 = R1 * tmpbuffer * multi_factor;  // R2 = R1(Vin/Vout -1) 
   return R2;
 }
-
 
 // Function to print various messages input based on Menu push button press
 void printMenuMsg()
@@ -284,7 +342,7 @@ void printMenuMsg()
       Serial.println("2k to 20k range");
       break;
     case (3):
-      display.print("R 20k - 0.2M range");
+      display.print("R 20k - 200k range");
       display.display();
       Serial.println("20k to 200k range");
       break;
@@ -307,9 +365,9 @@ void printMenuMsg()
          OLEDready();
     break;
     case (8):
-      display.print("Increase Scale");
+      display.print("Out of Scale");
       display.display();
-      Serial.println("Increase scale");
+      Serial.println("Out of scale");
       delay(1500);
       OLEDready();
       break;
@@ -323,22 +381,23 @@ void TestRun()
     switch (mode)
     {  
     case (0):
+        DisplayHelpMsg();
         __asm__("nop\n\t");
       break;
     case (1):
-        scale_one();
+        ResScaleOne();
       break;
     case (2):
-        scale_two();
+        ResScaleTwo();
       break;
     case (3):
-        scale_three();
+        ResScaleThree();
       break;
     case (4):
-        scale_four();
+        ResScaleFour();
       break;
     case (5):
-        L_test();
+        Ltest();
       break;
     case (6):
        AnalogDisplay();
@@ -347,10 +406,10 @@ void TestRun()
   digitalWrite(LED_BUILTIN, HIGH);
 }
 
-//Function print_Res : Print calculated resistor value and unit to serial monitor
+//Function PrintResult : Print calculated resistor value and unit to serial monitor
 //Inputs (2) : 1 , String unit unit of resistance Kohms Mohms ,
 // 2, float R2 , value of resistance calculated
-void print_Res(String unit, float R2)
+void PrintResult(String unit, float R2)
 {
   Serial.println("Resistance: ");
   Serial.print(R2);
@@ -389,12 +448,11 @@ void AnalogDisplay()
   display.print(VoltValue);
   
   display.display();
-  
   delay(2000);
   }
 }
-//Function L_test: Calculates Inductance
-void L_test()
+//Function Ltest: Calculates Inductance
+void Ltest()
 {
   double pulse, frequency, capacitance, inductance = 0;
   digitalWrite(OutLtestPin, HIGH);
@@ -409,20 +467,24 @@ void L_test()
     frequency = 1.E6 / (2 * pulse);
     inductance = 1. / (capacitance * frequency * frequency * 4.*3.14159 * 3.14159);
     inductance *= 1E6;
-
   }
 
   //Serial print
   Serial.print("High for uS:");
-  Serial.print( pulse );
+  Serial.println( pulse );
   Serial.print("\tfrequency Hz:");
-  Serial.print( frequency );
+  Serial.println( frequency );
   Serial.print("\tinductance uH:");
   Serial.println( inductance );
 
-  display.setCursor(0, 15);
+  display.setCursor(0, 12);
   display.print(inductance);
-  display.print("uH");
+  display.print("uH ");
+  display.setCursor(0, 22);
+  display.print(frequency);
+  display.print("Hz ");
+  display.print(pulse);
+  display.print("uS ");
   display.display();
   delay(2000);
   OLEDready();

@@ -1,0 +1,19 @@
+Parts List:
+
+>
+> I2C 0.91" inch 128x32 OLED Display Module Driver IC: SSD1306.
+>
+> Arduino NANO or UNO
+>
+> Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm, 4.7Kohms X 2 .
+>
+> Capacitors: 2 uF non-polarized  
+>
+> Two push buttons.
+>
+> Diode:  1N4001 or IN4148
+>
+> LM393 comparator IC [datasheet](https://www.onsemi.com/pub/Collateral/LM393-D.PDF) or LM339
+>
+> ZIF test socket , Output terminal or socket connections
+>

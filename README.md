@@ -1,3 +1,15 @@
+[![Website](https://img.shields.io/badge/Website-Link-blue.svg)](https://gavinlyonsrepo.github.io/)  [![Rss](https://img.shields.io/badge/Subscribe-RSS-yellow.svg)](https://gavinlyonsrepo.github.io//feed.xml)  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/whitelight976)
+
+Table of contents
+---------------------------
+
+  * [Overview](#overview)
+  * [Software used](#software-used)
+  * [Libraries](#libraries)
+  * [Parts list](#parts-list)
+  * [Push button control](#push-button-control)
+  * [Features](#features)
+
 Overview
 --------------------
 * Name : LR_meter_arduino
@@ -14,12 +26,9 @@ Overview
 * Author: Gavin Lyons
 
 
-Software Used
+Software used
 ------------------
-Arduino 1.8.5
-
-Eagle 9.0.1
-
+Arduino 1.8.5 & Eagle 9.0.1
 
 Libraries
 ------------------------
@@ -27,30 +36,9 @@ Libraries
 
 Parts List
 ------------------------------
-The schematic is available in Eagle in documents folder.
+The schematic and Parts list are available in documentation folder.
 
-Parts List:
-
->
-> I2C 0.91" inch 128x32 OLED Display Module Driver IC: SSD1306.
->
-> Arduino NANO or UNO
->
-> Resistors: 2kohms, 20kohms, 200kohms, 1Mohms, 150ohm, 330ohm, 4.7Kohms X 2 .
->
-> Capacitors: 2 uF non-polarized  
->
-> Two push buttons.
->
-> Diode:  1N4001 or IN4148
->
-> LM393 comparator IC [datasheet](https://www.onsemi.com/pub/Collateral/LM393-D.PDF) or LM339
->
-> ZIF test socket , Output terminal or socket connections
->
-
-
-Push Button control
+Push button control
 -------------------------------
 
 Push Buttons
@@ -118,9 +106,3 @@ We can now solve the equation for inductance.
 
 This displays the voltage and ADC digital value measured on A0, This can be used for testing potentiometers,
 sensors or measuring voltage levels. 
-
-Copyright
--------------------------------
-
-Copyright (C) 2018 G Lyons. This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, see license.md for more details
-
